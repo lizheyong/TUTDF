@@ -1,4 +1,4 @@
-# 吴恩达心电图识别DNN实现 Pytorch
+# 吴恩达 DNN心电图分类Pytorch实现 
 
 ## 模型介绍
 
