@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 def bn_relu(channels, sequential, dropout=0, order=''):
     """bn => relu [=>drop out]"""
-    net = sequential
+    net = sequential # 给哪个网络序列添加_bn_relu
     net.add_module(str(order)+'bn', nn.BatchNorm1d(channels))
     net.add_module(str(order)+'relu', nn.ReLU(inplace=True))
     if dropout:
@@ -14,7 +14,6 @@ def bn_relu(channels, sequential, dropout=0, order=''):
 class resnet_block(nn.Module):
     # x5
     """res = _bn_relu => conv => _bn_relu + drop out => conv"
-       out =  res + shorcut(input)
     """
     def __init__(self, in_channel, zero_pad, sequential, order=''):
         super().__init__()
@@ -31,24 +30,6 @@ class resnet_block(nn.Module):
         res.add_module(str(order)+'conv2', nn.Conv1d(in_channel, out_channel, kernel_size=3, stride=2, padding=1))
 
         self.res = res
-        self.shortcut = nn.MaxPool1d(2, padding=1, dilation=2)
-        self.zero_pad = zero_pad
-
-    def forward(self, x):
-        res = self.res(x)
-        shortcut = self.shortcut(x)
-        zero_pad = self.zero_pad
-
-        def zeropad(x):
-            y = torch.zeros_like(x)
-            return torch.cat([x, y], 1)  # keras写的2，这块再确认下
-
-        if zero_pad:
-            shortcut = zeropad(shortcut)
-
-        out = res + shortcut
-
-        return out
 
 class head_block(nn.Module):
     """head_1: conv => _bn_relu
@@ -84,19 +65,37 @@ class backbone_block(nn.Module):
     """
     def __init__(self):
         super().__init__()
-        backbone = nn.Sequential()
 
         start_channel = 32
+        # 生成几个sequential，在foward里让x分别通过
         for i in range(5):
+            exec("res%s = nn.Sequential()"%i)
             zero_pad = i%2  # 奇数变通道数，需要pad，concat，奇数除2刚好余1，zero_pad为true
-            resnet_block(start_channel, zero_pad, backbone, order=i)
+            exec("resnet_block(start_channel, zero_pad, res%s, order=i)"%i)
             if zero_pad:
                 start_channel = start_channel*2
+            exec("self.res%s = res%s" %(i,i))
 
-        self.backbone = backbone
+        self.shortcut = nn.MaxPool1d(2, padding=1, dilation=2)
 
     def forward(self, x):
-        x = self.backbone(x)
+        #定义个补0让通道数翻倍
+        def zeropad(x):
+            y = torch.zeros_like(x)
+            return torch.cat([x, y], 1)
+
+        for i in range(5):
+            # 计算直接的shortcut, res
+            shortcut = self.shortcut(x)
+
+            exec("a = self.res%s(x)"%i)  # 这里不能将结果直接给x，exec的bug
+            x = locals()['a'] # 这里也必须用locals()方法
+
+            # 处理需要zero_pad的
+            zero_pad = i % 2
+            if zero_pad:
+                shortcut = zeropad(shortcut)
+            x += shortcut
 
         return x
 

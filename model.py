@@ -29,6 +29,7 @@ if __name__ == '__main__':
 
     from torchsummary import summary
     summary(net, input_size=(1, 189)) # (channel, H, W)
+    print(net)
 
     # 指定训练集地址，开始训练
     HSI_dataset = dataset.HSI_Loader('water_10000.npy')
