@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import dataset
+from dataset import dataset
 from part import head_block, backbone_block,dense_block
 
 
@@ -32,14 +32,14 @@ if __name__ == '__main__':
     print(net)
 
     # 指定训练集地址，开始训练
-    HSI_dataset = dataset.HSI_Loader('water_10000.npy')
+    HSI_dataset = dataset.test_Loader('../dataset/water_10000.npy')
     train_loader = torch.utils.data.DataLoader(dataset=HSI_dataset,
                                                batch_size=1024,
                                                shuffle=True)
-    for curve, label in train_loader:
+    for curve in train_loader:
         # 将数据拷贝到device中
         curve = curve.unsqueeze(1).to(device=device, dtype=torch.float32)
-        label = label.to(device=device, dtype=torch.float32)
+        # label = label.to(device=device, dtype=torch.float32)
         break
     print(curve.shape)
     out = net(curve)
