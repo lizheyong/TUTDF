@@ -9,7 +9,7 @@ def bn_relu(channels, sequential, dropout=0, order=''):
     net.add_module(str(order)+'bn', nn.BatchNorm1d(channels))
     net.add_module(str(order)+'relu', nn.ReLU(inplace=True))
     if dropout:
-        net.add_module(str(order)+'dropout', nn.Dropout(p=0.2))
+        net.add_module(str(order)+'dropout', nn.Dropout(p=0.1))
 
 class resnet_block(nn.Module):
     # x5

@@ -21,6 +21,7 @@ class train_Loader(Dataset):
         # 返回训练集大小
         return len(self.all_curve)
 
+# 没有标签的加载
 class test_Loader(Dataset):
 
     def __init__(self, curve):
@@ -39,16 +40,17 @@ class test_Loader(Dataset):
 
 if __name__ == "__main__":
 
-    HSI_dataset = test_Loader(r'D:\ZPEAR\gitclone\SUTDF\data\Actual_data\train_data\train_data.npy',
-                         r'D:\ZPEAR\gitclone\SUTDF\data\Actual_data\train_data\train_label.npy')
+    HSI_dataset = train_Loader(r"D:\LiZheyong\data\iron_30_water_30_depth_0-3_0.01\train_data.npy",
+                         r"D:\LiZheyong\data\iron_30_water_30_depth_0-3_0.01\train_label.npy")
 
     print("数据个数：", len(HSI_dataset))
     train_loader = torch.utils.data.DataLoader(dataset=HSI_dataset,
-                                               batch_size=50,
+                                               batch_size=1024,
                                                shuffle=False)
-    batch_size = 50
     for pixel_curve, label in train_loader:
-        print(pixel_curve.reshape(batch_size, 1, -1).shape)
+        print(pixel_curve.unsqueeze(1).shape)
         print(pixel_curve)
+        print(label.shape)
         print(label)
         break
+

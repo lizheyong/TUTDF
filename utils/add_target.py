@@ -4,7 +4,10 @@ import random
 import torch
 from math import pi, e, cos
 from scipy.ndimage import gaussian_filter1d
-from model.iop_model import Encode_Net, Decode_Net1, Decode_Net2
+from model.iop.iop_model import Encode_Net, Decode_Net1, Decode_Net2
+"""
+选择目标陆地像素点，水像素点，深度，合成目标在水下的反射率曲线，默认R模型，不是Rrs(不除以pi)
+"""
 
 def add_target_pixel(r_b, r_inf, h, Rrs=False):
         """

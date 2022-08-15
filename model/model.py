@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from dataset import dataset
-from part import head_block, backbone_block,dense_block
+from model.part import head_block, backbone_block,dense_block
 
 
 class Net(nn.Module):
