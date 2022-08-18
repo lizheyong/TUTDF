@@ -56,10 +56,7 @@ class head_block(nn.Module):
 
     def forward(self, x):
         x = self.head_1(x)
-        # x1 = F.adaptive_avg_pool1d(x, 1) # [B,C,1] [B,32,1]
         x = self.head_2(x) + self.shortcut(x)
-        # x2 = F.adaptive_avg_pool1d(x, 1) # [B,C,1] [B,32,1]
-        # x3 = torch.cat((x1, x2), 1).squeeze() # [B, 64]
 
         return x
 
@@ -151,17 +148,25 @@ class dense_block_B(nn.Module):
         return x
 
 class domain_pred(nn.Module):
-    """ _bn_relu => dense => softmax
-    """
+
     def __init__(self):
         super().__init__()
 
         dense = nn.Sequential()
-
-        dense.add_module('linear1', nn.Linear(64, 32))
-        dense.add_module('linear2', nn.Linear(32, 16))
-        dense.add_module('linear3', nn.Linear(16, 8))
-        dense.add_module('linear4', nn.Linear(8, 2))
+        dense.add_module('conv1', nn.Conv1d(32, 64, kernel_size=3, stride=1, padding=1, bias=False))
+        dense.add_module('pool1', nn.MaxPool1d(2, padding=1, dilation=2))
+        bn_relu(64, dense, order=1)
+        dense.add_module('conv2', nn.Conv1d(64, 128, kernel_size=3, stride=1, padding=1, bias=False))
+        dense.add_module('pool2',nn.MaxPool1d(2, padding=1, dilation=2))
+        bn_relu(128, dense, order=2)
+        # B,128,15
+        dense.add_module('flatten', nn.Flatten())
+        dense.add_module('linear1', nn.Linear(1920, 512))
+        dense.add_module('linear2', nn.Linear(512, 256))
+        dense.add_module('linear3', nn.Linear(256, 128))
+        dense.add_module('linear4', nn.Linear(128, 64))
+        dense.add_module('linear5', nn.Linear(64, 32))
+        dense.add_module('linear6', nn.Linear(32, 2))
 
         self.dense = dense
 

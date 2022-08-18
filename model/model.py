@@ -2,27 +2,68 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from dataset import dataset
-from part import head_block, backbone_block,dense_block_A, dense_block_B, domain_pred
+from .part import *
 
 
-class Net(nn.Module):
+class Head(nn.Module):
     def __init__(self):
         super().__init__()
 
         self.head = head_block()
-        self.backbone = backbone_block()
-        self.dense_A = dense_block_A()
-        self.dense_B = dense_block_B()
-        self.domain_pred = domain_pred()
 
     def forward(self, x):
         x = self.head(x)
-        x = self.backbone(x)
-        # x3 = self.doamin_pred(x2)
-        x = self.dense_A(x)
-        # x = self.dense_B(x)
 
         return x
+
+class Backbone(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.backbone = backbone_block()
+
+    def forward(self, x):
+        x = self.backbone(x)
+        return x
+
+class DenseA(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.dense_A = dense_block_A()
+
+    def forward(self, x):
+        x = self.dense_A(x)
+        return x
+
+class DenseB(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.dense_B = dense_block_B()
+
+    def forward(self, x):
+        x = self.dense_B(x)
+        return x
+
+
+class Head_P(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+        self.head = head_block_P()
+
+    def forward(self, x):
+        x = self.head(x)
+
+        return x
+
+class DomainPred(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.domain_pred = domain_pred()
+
+    def forward(self, x):
+        x = self.domain_pred(x)
+        return x
+
 
 if __name__ == '__main__':
 

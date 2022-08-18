@@ -23,17 +23,17 @@ import numpy as np
 """
 拼接水和水下目标数据集，并将两个标签合到一起
 """
-water = np.load(r'D:\LiZheyong\data\iron_30_water_30_depth_0-3_0.01\裁剪的水\all_water.npy')
-target = np.load(r'D:\LiZheyong\data\iron_30_water_30_depth_0-3_0.01\陆地像素点，水背景像素点\synthetic_data.npy')
+water = np.load(r"C:\Users\423\Desktop\MLT\train_domain_1.npy")
+target = np.load(r"C:\Users\423\Desktop\MLT\train_domain_2.npy")
 
 train_data = np.vstack((water,target))
 
-water_label = np.zeros(270000)
-target_label = np.ones(270000)
+water_label = np.zeros(10400)
+target_label = np.ones(10400)
 
 train_label = np.hstack((water_label, target_label))
 
 print(f'train_data:{train_data.shape}, train_label{train_label.shape}')
-np.save(r'D:\LiZheyong\data\iron_30_water_30_depth_0-3_0.01\train_data', train_data)
-np.save(r'D:\LiZheyong\data\iron_30_water_30_depth_0-3_0.01\train_label', train_label)
+np.save(r"C:\Users\423\Desktop\MLT\domain1+2.npy", train_data)
+np.save(r"C:\Users\423\Desktop\MLT\domain1+2_label.npy", train_label)
 # train_data:(540000, 189), train_label(540000,)
