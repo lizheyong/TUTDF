@@ -56,19 +56,22 @@ class head_block(nn.Module):
 
     def forward(self, x):
         x = self.head_1(x)
+        # x1 = F.adaptive_avg_pool1d(x, 1) # [B,C,1] [B,32,1]
         x = self.head_2(x) + self.shortcut(x)
+        # x2 = F.adaptive_avg_pool1d(x, 1) # [B,C,1] [B,32,1]
+        # x3 = torch.cat((x1, x2), 1).squeeze() # [B, 64]
 
         return x
 
 class backbone_block(nn.Module):
-    """resnet_block x5
+    """resnet_block x2
     """
     def __init__(self):
         super().__init__()
 
         start_channel = 32
         # 生成几个sequential，在foward里让x分别通过
-        for i in range(5):
+        for i in range(3):
             exec("res%s = nn.Sequential()"%i)
             zero_pad = i%2  # 奇数变通道数，需要pad，concat，奇数除2刚好余1，zero_pad为true
             exec("resnet_block(start_channel, zero_pad, res%s, order=i)"%i)
@@ -84,7 +87,7 @@ class backbone_block(nn.Module):
             y = torch.zeros_like(x)
             return torch.cat([x, y], 1)
 
-        for i in range(5):
+        for i in range(2):
             # 计算直接的shortcut, res
             shortcut = self.shortcut(x)
 
@@ -99,7 +102,55 @@ class backbone_block(nn.Module):
 
         return x
 
-class dense_block(nn.Module):
+class dense_block_A(nn.Module):
+    """ _bn_relu => dense => softmax
+    """
+    def __init__(self):
+        super().__init__()
+
+        dense_A = nn.Sequential()
+
+        bn_relu(64, dense_A)
+        dense_A.add_module('flatten', nn.Flatten())
+        dense_A.add_module('linear1', nn.Linear(960, 512))
+        dense_A.add_module('linear2', nn.Linear(512, 256))
+        dense_A.add_module('linear3', nn.Linear(256, 128))
+        dense_A.add_module('linear4', nn.Linear(128, 64))
+        dense_A.add_module('linear5', nn.Linear(64, 32))
+        dense_A.add_module('linear6', nn.Linear(32, 2))
+
+        self.dense = dense_A
+
+    def forward(self, x):
+        x = self.dense(x)
+
+        return x
+
+class dense_block_B(nn.Module):
+    """ _bn_relu => dense => softmax
+    """
+    def __init__(self):
+        super().__init__()
+
+        dense_B = nn.Sequential()
+
+        bn_relu(64, dense_B)
+        dense_B.add_module('flatten', nn.Flatten())
+        dense_B.add_module('linear1', nn.Linear(960, 512))
+        dense_B.add_module('linear2', nn.Linear(512, 256))
+        dense_B.add_module('linear3', nn.Linear(256, 128))
+        dense_B.add_module('linear4', nn.Linear(128, 64))
+        dense_B.add_module('linear5', nn.Linear(64, 32))
+        dense_B.add_module('linear6', nn.Linear(32, 2))
+
+        self.dense = dense_B
+
+    def forward(self, x):
+        x = self.dense(x)
+
+        return x
+
+class domain_pred(nn.Module):
     """ _bn_relu => dense => softmax
     """
     def __init__(self):
@@ -107,13 +158,10 @@ class dense_block(nn.Module):
 
         dense = nn.Sequential()
 
-        bn_relu(128, dense)
-        dense.add_module('flatten', nn.Flatten())
-        dense.add_module('linear1', nn.Linear(384, 128))
-        dense.add_module('linear2', nn.Linear(128, 64))
-        dense.add_module('linear3', nn.Linear(64, 32))
-        dense.add_module('linear4', nn.Linear(32, 16))
-        dense.add_module('linear5', nn.Linear(16, 2))
+        dense.add_module('linear1', nn.Linear(64, 32))
+        dense.add_module('linear2', nn.Linear(32, 16))
+        dense.add_module('linear3', nn.Linear(16, 8))
+        dense.add_module('linear4', nn.Linear(8, 2))
 
         self.dense = dense
 

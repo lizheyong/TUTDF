@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from dataset import dataset
-from model.part import head_block, backbone_block,dense_block
+from part import head_block, backbone_block,dense_block_A, dense_block_B, domain_pred
 
 
 class Net(nn.Module):
@@ -11,12 +11,16 @@ class Net(nn.Module):
 
         self.head = head_block()
         self.backbone = backbone_block()
-        self.dense = dense_block()
+        self.dense_A = dense_block_A()
+        self.dense_B = dense_block_B()
+        self.domain_pred = domain_pred()
 
     def forward(self, x):
         x = self.head(x)
         x = self.backbone(x)
-        x = self.dense(x)
+        # x3 = self.doamin_pred(x2)
+        x = self.dense_A(x)
+        # x = self.dense_B(x)
 
         return x
 
@@ -28,7 +32,7 @@ if __name__ == '__main__':
     net.to(device=device)
 
     from torchsummary import summary
-    summary(net, input_size=(1, 189)) # (channel, H, W)
+    summary(net, input_size=(1, 120)) # (channel, H, W)
     print(net)
 
     # 指定训练集地址，开始训练
