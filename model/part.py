@@ -153,13 +153,13 @@ class domain_pred(nn.Module):
         super().__init__()
 
         dense = nn.Sequential()
-        dense.add_module('conv1', nn.Conv1d(32, 64, kernel_size=3, stride=1, padding=1, bias=False))
+        dense.add_module('conv1', nn.Conv1d(1, 32, kernel_size=3, stride=1, padding=1, bias=False))
         dense.add_module('pool1', nn.MaxPool1d(2, padding=1, dilation=2))
-        bn_relu(64, dense, order=1)
-        dense.add_module('conv2', nn.Conv1d(64, 128, kernel_size=3, stride=1, padding=1, bias=False))
+        bn_relu(32, dense, order=1)
+        dense.add_module('conv2', nn.Conv1d(32, 64, kernel_size=3, stride=1, padding=1, bias=False))
         dense.add_module('pool2',nn.MaxPool1d(2, padding=1, dilation=2))
-        bn_relu(128, dense, order=2)
-        # B,128,15
+        bn_relu(64, dense, order=2)
+        # B,64,30
         dense.add_module('flatten', nn.Flatten())
         dense.add_module('linear1', nn.Linear(1920, 512))
         dense.add_module('linear2', nn.Linear(512, 256))
