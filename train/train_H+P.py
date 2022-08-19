@@ -63,4 +63,4 @@ if __name__ == "__main__":
                          r"C:\Users\423\Desktop\MLT\domain1+2_label.npy")
 
     train_net(net0=Head, net1=DomainPred,  train_dataset=dataset, device=device,
-              batch_size=32, lr=0.0001, epochs=100)
+              batch_size=32, lr=0.001, epochs=100)
