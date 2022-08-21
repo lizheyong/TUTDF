@@ -26,7 +26,7 @@ class resnet_block(nn.Module):
 
         bn_relu(in_channel, res, order=order)
         res.add_module(str(order)+'conv1', nn.Conv1d(in_channel, in_channel, kernel_size=3, stride=1, padding=1, bias=False))
-        bn_relu(in_channel, res, dropout=1, order=str(order)+'+')
+        bn_relu(in_channel, res, dropout=0, order=str(order)+'+')
         res.add_module(str(order)+'conv2', nn.Conv1d(in_channel, out_channel, kernel_size=3, stride=2, padding=1))
 
         self.res = res
@@ -47,7 +47,7 @@ class head_block(nn.Module):
         head_2 = nn.Sequential()
 
         head_2.add_module('conv2', nn.Conv1d(32, 32, kernel_size=3, stride=1, padding=1, bias=False))
-        bn_relu(32, head_2, dropout=1)
+        bn_relu(32, head_2, dropout=0)
         head_2.add_module('conv3', nn.Conv1d(32, 32, kernel_size=3, stride=2, padding=1))
 
         self.head_1 = head_1
@@ -99,69 +99,17 @@ class backbone_block(nn.Module):
 
         return x
 
-class dense_block_A(nn.Module):
+class dense_block(nn.Module):
     """ _bn_relu => dense => softmax
     """
-    def __init__(self):
-        super().__init__()
-
-        dense_A = nn.Sequential()
-
-        bn_relu(64, dense_A)
-        dense_A.add_module('flatten', nn.Flatten())
-        dense_A.add_module('linear1', nn.Linear(960, 512))
-        dense_A.add_module('linear2', nn.Linear(512, 256))
-        dense_A.add_module('linear3', nn.Linear(256, 128))
-        dense_A.add_module('linear4', nn.Linear(128, 64))
-        dense_A.add_module('linear5', nn.Linear(64, 32))
-        dense_A.add_module('linear6', nn.Linear(32, 2))
-
-        self.dense = dense_A
-
-    def forward(self, x):
-        x = self.dense(x)
-
-        return x
-
-class dense_block_B(nn.Module):
-    """ _bn_relu => dense => softmax
-    """
-    def __init__(self):
-        super().__init__()
-
-        dense_B = nn.Sequential()
-
-        bn_relu(64, dense_B)
-        dense_B.add_module('flatten', nn.Flatten())
-        dense_B.add_module('linear1', nn.Linear(960, 512))
-        dense_B.add_module('linear2', nn.Linear(512, 256))
-        dense_B.add_module('linear3', nn.Linear(256, 128))
-        dense_B.add_module('linear4', nn.Linear(128, 64))
-        dense_B.add_module('linear5', nn.Linear(64, 32))
-        dense_B.add_module('linear6', nn.Linear(32, 2))
-
-        self.dense = dense_B
-
-    def forward(self, x):
-        x = self.dense(x)
-
-        return x
-
-class domain_pred(nn.Module):
-
     def __init__(self):
         super().__init__()
 
         dense = nn.Sequential()
-        dense.add_module('conv1', nn.Conv1d(1, 32, kernel_size=3, stride=1, padding=1, bias=False))
-        dense.add_module('pool1', nn.MaxPool1d(2, padding=1, dilation=2))
-        bn_relu(32, dense, order=1)
-        dense.add_module('conv2', nn.Conv1d(32, 64, kernel_size=3, stride=1, padding=1, bias=False))
-        dense.add_module('pool2',nn.MaxPool1d(2, padding=1, dilation=2))
-        bn_relu(64, dense, order=2)
-        # B,64,30
+
+        bn_relu(64, dense)
         dense.add_module('flatten', nn.Flatten())
-        dense.add_module('linear1', nn.Linear(1920, 512))
+        dense.add_module('linear1', nn.Linear(960, 512))
         dense.add_module('linear2', nn.Linear(512, 256))
         dense.add_module('linear3', nn.Linear(256, 128))
         dense.add_module('linear4', nn.Linear(128, 64))

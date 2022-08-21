@@ -26,13 +26,13 @@ if __name__ == "__main__":
     #             '0.9m_150x150.hdr', '1.0m_150x150.hdr','1.3m_150x150.hdr', '1.6m_150x150.hdr']
     # for i in range(len(file_name)):
     #     file_name[i] = f'D:\LiZheyong\data\iron_30_water_30_depth_0-3_0.01\裁剪的水\{file_name[i]}'
-    file_name = [r'C:\Users\423\Desktop\4.hdr']
+    file_name = [r"C:\Users\423\Desktop\铁测试\2.2m\水100x100\2.2m_water.hdr"]
     for file in file_name:
         name,_ = os.path.splitext(file)
         HSI_image = open_file(file)
         all_curve = HSI_image.read_pixel(0, 0) # 读一个占位，往后拼接，最后删了这个占位的
-        for raw in range(200):
-            for col in range(200):
+        for raw in range(100):
+            for col in range(100):
                 pixel_curve = HSI_image.read_pixel(raw, col)
                 all_curve = np.vstack((all_curve, pixel_curve))
             print(raw)

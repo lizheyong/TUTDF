@@ -12,6 +12,7 @@ class train_Loader(Dataset):
 
     def __getitem__(self, index):
         # 根据index读取pixel的光谱曲线
+        # pixel_curve = torch.tensor(self.all_curve[index, 9:129])
         pixel_curve = torch.tensor(self.all_curve[index, :])
         label = torch.tensor(self.label[index])
 
@@ -29,7 +30,7 @@ class test_Loader(Dataset):
 
     def __getitem__(self, index):
         # 根据index读取pixel的光谱曲线
-        pixel_curve = torch.tensor(self.all_curve[index, :120])
+        pixel_curve = torch.tensor(self.all_curve[index, 9:129])
 
         return pixel_curve
 
