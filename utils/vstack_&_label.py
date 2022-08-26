@@ -23,8 +23,10 @@ import numpy as np
 """
 拼接水和水下目标数据集，并将两个标签合到一起
 """
-water = np.load(r"C:\Users\423\Desktop\铁测试\2.2m\水100x100\2.2m_water.npy")[:,9:129]
-target = np.load(r"C:\Users\423\Desktop\铁测试\2.2m\合成数据2.2m\2.2m_synthetic_data.npy")
+this = '1.6m'
+
+water = np.load(fr"C:\Users\zheyong\Desktop\石测试\{this}\水100x100\{this}_water.npy")[:,9:129]
+target = np.load(fr"C:\Users\zheyong\Desktop\石测试\{this}\合成数据\{this}_no_synthetic_data.npy")
 
 train_data = np.vstack((water,target))
 
@@ -34,6 +36,6 @@ target_label = np.ones(10000)
 train_label = np.hstack((water_label, target_label))
 
 print(f'train_data:{train_data.shape}, train_label{train_label.shape}')
-np.save(r"C:\Users\423\Desktop\铁测试\2.2m\训练\2.2m_train.npy", train_data)
-np.save(r"C:\Users\423\Desktop\铁测试\2.2m\训练\2.2m_train_label.npy", train_label)
+np.save(fr"C:\Users\zheyong\Desktop\石测试\{this}\训练\{this}_train.npy", train_data)
+np.save(fr"C:\Users\zheyong\Desktop\石测试\{this}\训练\{this}_train_label.npy", train_label)
 # train_data:(540000, 189), train_label(540000,)

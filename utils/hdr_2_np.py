@@ -21,18 +21,16 @@ def open_file(dataset):
 
 if __name__ == "__main__":
 
-    # file_name = ['0.1m_150x150.hdr', '0.2m_150x150.hdr', '0.3m_150x150.hdr', '0.4m_150x150.hdr',
-    #             '0.5m_150x150.hdr','0.6m_150x150.hdr', '0.7m_150x150.hdr', '0.8m_150x150.hdr',
-    #             '0.9m_150x150.hdr', '1.0m_150x150.hdr','1.3m_150x150.hdr', '1.6m_150x150.hdr']
-    # for i in range(len(file_name)):
-    #     file_name[i] = f'D:\LiZheyong\data\iron_30_water_30_depth_0-3_0.01\裁剪的水\{file_name[i]}'
-    file_name = [r"C:\Users\423\Desktop\铁测试\2.2m\水100x100\2.2m_water.hdr"]
-    for file in file_name:
+
+    # thislist = ['0.1m','0.3m','0.6m','0.9m']
+    thislist = ['stone10x10']
+    for this in thislist:
+        file = fr"C:\Users\zheyong\Desktop\石测试\原始HSI\\{this}.hdr"
         name,_ = os.path.splitext(file)
         HSI_image = open_file(file)
         all_curve = HSI_image.read_pixel(0, 0) # 读一个占位，往后拼接，最后删了这个占位的
-        for raw in range(100):
-            for col in range(100):
+        for raw in range(10):
+            for col in range(10):
                 pixel_curve = HSI_image.read_pixel(raw, col)
                 all_curve = np.vstack((all_curve, pixel_curve))
             print(raw)

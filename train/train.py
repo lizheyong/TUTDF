@@ -15,6 +15,7 @@ def train_net(net, train_dataset, device, batch_size, lr, epochs):
                                                shuffle=True)
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=lr, betas=(0.9, 0.999), eps=1e-08, weight_decay=1e-2, amsgrad=False)
+    # optimizer = optim.RMSprop(net.parameters(), lr=lr, eps=1e-08,  weight_decay=1e-2,  momentum=0.9)
     best_loss = float('inf')
 
     for epoch in range(epochs):
@@ -32,7 +33,7 @@ def train_net(net, train_dataset, device, batch_size, lr, epochs):
             # 保存loss值最小的网络参数
             if loss < best_loss:
                 best_loss = loss
-                torch.save(net.state_dict(), r"C:\Users\423\Desktop\铁测试\0.1m\训练\resnet_0.1m.pth")
+                torch.save(net.state_dict(), fr"C:\Users\zheyong\Desktop\石测试\{this}\训练\resnet_{this}.pth")
             # 更新参数
             loss.backward()
             optimizer.step()
@@ -46,11 +47,11 @@ def train_net(net, train_dataset, device, batch_size, lr, epochs):
 
 if __name__ == "__main__":
 
-
+    this = '1.6m'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     ResNet = ResNet().to(device=device)
-    dataset = train_Loader(r"C:\Users\423\Desktop\铁测试\0.1m\训练\0.1m_train.npy",
-                         r"C:\Users\423\Desktop\铁测试\0.1m\训练\0.1m_train_label.npy")
+    dataset = train_Loader(fr"C:\Users\zheyong\Desktop\石测试\{this}\训练\{this}_train.npy",
+                         fr"C:\Users\zheyong\Desktop\石测试\{this}\训练\{this}_train_label.npy")
 
     train_net(net=ResNet, train_dataset=dataset, device=device,
-              batch_size=1024, lr=0.0001, epochs=1000)
+              batch_size=1024, lr=0.0001, epochs=800)

@@ -9,13 +9,14 @@ import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import matplotlib
 
 def test_net(net,  test_dataset, device, batch_size):
 
     test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                                batch_size=batch_size,
                                                shuffle=False)
-    net.load_state_dict(torch.load(r"C:\Users\423\Desktop\铁测试\0.1m\训练\resnet_0.1m.pth"))
+    net.load_state_dict(torch.load(fr"C:\Users\zheyong\Desktop\铁测试\{this}\训练\resnet_deep{this}.pth"))
     net.eval()
 
     class_map = np.ones((1)) # 一个占位，往后拼接
@@ -23,8 +24,9 @@ def test_net(net,  test_dataset, device, batch_size):
         curve = curve.unsqueeze(1).to(device=device, dtype=torch.float32)
         time_start = time.time()
         out = net(curve)
-        # dp = F.softmax(Pred(out),1)[:, 0]
-        out = out[:,1]
+        # out= F.softmax(out,1)[:, 1]
+        out = out[:, 1]
+
         time_end = time.time()
         print('time cost', time_end - time_start, 's')
         out = out.detach().cpu().numpy()
@@ -36,7 +38,11 @@ def test_net(net,  test_dataset, device, batch_size):
         #         class_map[i] = 0
     class_map = np.delete(class_map, 0, 0)  # 最后删了这个占位的
     class_map = np.resize(class_map, (200, 200))
-    np.save(r'C:\Users\423\Desktop\铁测试\0.1m\测试\result', class_map)
+    np.save(fr'C:\Users\zheyong\Desktop\铁测试\{this}\测试\spatial_result', class_map)
+    # np.save(fr'C:\Users\zheyong\Desktop\石测试\{this}\测试\result', class_map)
+
+    matplotlib.image.imsave('spatial.png', class_map)
+    # matplotlib.image.imsave('result.png', class_map)
     plt.imshow(class_map)
     plt.show()
 
@@ -45,10 +51,11 @@ def test_net(net,  test_dataset, device, batch_size):
 
 if __name__ == "__main__":
 
-
+    this = '2.2m'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     ResNet = ResNet().to(device=device)
-    dataset = test_Loader(r"C:\Users\423\Desktop\铁测试\0.1m\测试\0.1m.npy")
+    # dataset = test_Loader(fr"C:\Users\zheyong\Desktop\铁测试\{this}\测试\{this}.npy")
+    dataset = test_Loader(fr"C:\Users\zheyong\Desktop\铁测试\{this}\测试\{this}_iron_spatial.npy")
 
     test_net(net=ResNet, test_dataset=dataset, device=device,
-              batch_size=40000)
+              batch_size=4000)
