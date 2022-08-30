@@ -33,7 +33,7 @@ def train_net(net, train_dataset, device, batch_size, lr, epochs):
             # 保存loss值最小的网络参数
             if loss < best_loss:
                 best_loss = loss
-                torch.save(net.state_dict(), fr"C:\Users\zheyong\Desktop\石测试\{this}\训练\resnet_{this}.pth")
+                torch.save(net.state_dict(), fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\橡胶测试\{this}\训练\resnet_{this}.pth")
             # 更新参数
             loss.backward()
             optimizer.step()
@@ -47,11 +47,11 @@ def train_net(net, train_dataset, device, batch_size, lr, epochs):
 
 if __name__ == "__main__":
 
-    this = '1.6m'
+    this = '0.9m'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     ResNet = ResNet().to(device=device)
-    dataset = train_Loader(fr"C:\Users\zheyong\Desktop\石测试\{this}\训练\{this}_train.npy",
-                         fr"C:\Users\zheyong\Desktop\石测试\{this}\训练\{this}_train_label.npy")
+    dataset = train_Loader(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\橡胶测试\{this}\训练\{this}_train.npy",
+                         fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\橡胶测试\{this}\训练\{this}_train_label.npy")
 
     train_net(net=ResNet, train_dataset=dataset, device=device,
               batch_size=1024, lr=0.0001, epochs=800)

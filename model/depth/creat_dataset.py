@@ -34,9 +34,9 @@ def add_target_pixel(r_b, r_inf, h):
         net0.to(device=device)
         net1.to(device=device)
         net2.to(device=device)
-        net0.load_state_dict(torch.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\2.2m\水100x100\best_model_net0.pth", map_location=device))  # 加载模型参数
-        net1.load_state_dict(torch.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\2.2m\水100x100\best_model_net1.pth", map_location=device))  # 加载模型参数
-        net2.load_state_dict(torch.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\2.2m\水100x100\best_model_net2.pth", map_location=device))
+        net0.load_state_dict(torch.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\1.0m\水100x100\best_model_net0.pth", map_location=device))  # 加载模型参数
+        net1.load_state_dict(torch.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\1.0m\水100x100\best_model_net1.pth", map_location=device))  # 加载模型参数
+        net2.load_state_dict(torch.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\1.0m\水100x100\best_model_net2.pth", map_location=device))
         net0.eval()
         net1.eval()
         net2.eval()
@@ -78,9 +78,9 @@ def add_target_pixel(r_b, r_inf, h):
 
 if __name__ == '__main__':
         # 读取要合成的“目标曲线”，“水曲线”，”波长范围“
-        R_B = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\铁10x10\0.1m_Iron.npy")[0:10,9:129]
-        R_INF = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\1.0m\水100x100\1.0m_water.npy")[0:10,9:129]
-        wavelength = np.load(r"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\wavelength.npy")
+        R_B = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\原始HSI\stone.npy")[0:10,9:129]
+        R_INF = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\1.0m\水100x100\1.0m_water.npy")[0:10,9:129]
+        wavelength = np.load(r"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\wavelength.npy")
         # 设置深度，深度变化
         H = np.linspace(0, 2.3, 231)
         # 合成目标水下反射率曲线
@@ -96,6 +96,6 @@ if __name__ == '__main__':
                                 s += 1
                                 if s%100==0:
                                         print(f'{s}/{data_len}')
-        np.save(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\深度估计网络数据\synthetic_data.npy",synthetic_data)
-        np.save(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\深度估计网络数据\label",label)
+        np.save(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\深度估计网络数据\synthetic_data.npy",synthetic_data)
+        np.save(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\深度估计网络数据\label",label)
         print(f'深度估计_合成数据生成结束,s={s}')

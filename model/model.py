@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from dataset import dataset
-from part import *
+from .part import *
 
 
 class ResNet(nn.Module):

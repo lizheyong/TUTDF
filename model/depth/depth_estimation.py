@@ -7,7 +7,7 @@ import torch.nn.functional as F
 class Depth_Encode_Net(nn.Module):
 
     def __init__(self, n_channels=1, n_classes=2):
-        super(Encode_Net, self).__init__()
+        super().__init__()
         self.n_channels = n_channels
         self.n_classes = n_classes
 
@@ -19,6 +19,7 @@ class Depth_Encode_Net(nn.Module):
         self.linear2 = nn.Linear(512,128)
         self.linear3 = nn.Linear(128,32)
         self.linear4 = nn.Linear(32,1)
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         x = self.inc(x)
@@ -29,6 +30,7 @@ class Depth_Encode_Net(nn.Module):
         x = self.linear2(x)
         x = self.linear3(x)
         x = self.linear4(x)
+        x = self.sigmoid(x)
 
         return x
 
