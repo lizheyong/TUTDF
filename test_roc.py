@@ -1,3 +1,9 @@
+from sklearn.svm import SVC
+from sklearn.metrics import roc_curve, roc_auc_score
+from sklearn.datasets import make_blobs
+from sklearn. model_selection import train_test_split
+import matplotlib.pyplot as plt
+import numpy as np
 from model.model import *
 from dataset.dataset import  test_Loader
 from torch import optim
@@ -38,20 +44,14 @@ def test_net(net,  test_dataset, device, batch_size):
         #         class_map[i] = 0
     class_map = np.delete(class_map, 0, 0)  # 最后删了这个占位的
     class_map = np.resize(class_map, (200, 200))
-    np.save(fr'C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\测试\new_result', class_map)
-    # np.save(fr'C:\Users\zheyong\Desktop\石测试\{this}\测试\result', class_map)
-
-    matplotlib.image.imsave('new.png', class_map)
-    # matplotlib.image.imsave('result.png', class_map)
-    plt.imshow(class_map)
-    plt.show()
-
-
-
+    label = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\1.6m\测试\label_1.6m.npy").flatten()
+    TUTDF = class_map.flatten()
+    auc = roc_auc_score(label, TUTDF)
+    print(auc)
 
 if __name__ == "__main__":
 
-    this = '2.2m'
+    this = '1.6m'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     ResNet = ResNet().to(device=device)
     # dataset = test_Loader(fr"C:\Users\zheyong\Desktop\铁测试\{this}\测试\{this}.npy")
@@ -59,3 +59,4 @@ if __name__ == "__main__":
 
     test_net(net=ResNet, test_dataset=dataset, device=device,
               batch_size=4000)
+

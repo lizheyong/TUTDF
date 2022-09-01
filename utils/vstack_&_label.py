@@ -23,19 +23,22 @@ import numpy as np
 """
 拼接水和水下目标数据集，并将两个标签合到一起
 """
-this = '0.9m'
+this = '1.6m'
 
-water = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\橡胶测试\{this}\水100x100\{this}_water.npy")[:,9:129]
-target = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\橡胶测试\{this}\合成数据\{this}_no_synthetic_data.npy")
+water = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\水100x100\{this}_water.npy")[:,9:129]
+target = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\合成数据{this}\{this}_no_synthetic_data.npy")
+
+water = np.tile(water, (10,1))
+
 
 train_data = np.vstack((water,target))
 
-water_label = np.zeros(10000)
-target_label = np.ones(10000)
+water_label = np.zeros(100000)
+target_label = np.ones(100000)
 
 train_label = np.hstack((water_label, target_label))
 
 print(f'train_data:{train_data.shape}, train_label{train_label.shape}')
-np.save(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\橡胶测试\{this}\训练\{this}_train.npy", train_data)
-np.save(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\橡胶测试\{this}\训练\{this}_train_label.npy", train_label)
+np.save(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\训练\{this}_train.npy", train_data)
+np.save(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\训练\{this}_train_label.npy", train_label)
 # train_data:(540000, 189), train_label(540000,)

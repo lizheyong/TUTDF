@@ -1,13 +1,10 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import random
 import torch
 from math import pi, e, cos
 from scipy.ndimage import gaussian_filter1d
 from model.iop.iop_model import Encode_Net, Decode_Net1, Decode_Net2
-"""
-选择目标陆地像素点，水像素点，深度，合成目标在水下的反射率曲线
-"""
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 def add_target_pixel(r_b, r_inf, h):
         """
@@ -78,24 +75,29 @@ def add_target_pixel(r_b, r_inf, h):
 
 if __name__ == '__main__':
         # 读取要合成的“目标曲线”，“水曲线”，”波长范围“
-        this = '1.6m'
-        R_B = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\铁10x10\0.1m_Iron.npy")[0:100,9:129]
-        R_INF = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\水100x100\{this}_water.npy")[0:10,9:129]
+        this = '2.2m'
+        R_B = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\铁10x10\0.1m_Iron.npy")[10:20,9:129]
+        R_INF = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\水100x100\{this}_water.npy")[10:20,9:129]
         wavelength = np.load(r"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\wavelength.npy")
         # 设置深度，深度变化
-        H = np.linspace(1.2,2.0, 100)
+        H = np.linspace(0,0.4, 10)
         # 合成目标水下反射率曲线
-        data_len = len(R_B)*len(R_INF)*len(H)
-        synthetic_data = np.zeros((data_len, 120))
-        print(f'R_B:{len(R_B)}  R_INF:{len(R_INF)}  H:{len(H)}  data_len:{data_len}')
+        synthetic_data = np.zeros((10, 120))
         s = 0 # 替换空合成数据，索引s从0开始
-        for i in range(len(R_B)):
-                for j in range(len(R_INF)):
-                        for h in range(len(H)):
-                                synthetic_data[s] = add_target_pixel(R_B[i], R_INF[j], H[h])
-                                s += 1
-                                if s%100==0:
-                                        print(f'{s}/{data_len}')
-        # synthetic_data = np.tile(synthetic_data, (2,1))
-        np.save(fr'C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\合成数据{this}\{this}_no_synthetic_data.npy',synthetic_data)
-        print(f'合成数据生成结束,s={s}')
+        for h in range(len(H)):
+                synthetic_data[s] = add_target_pixel(R_B[0], R_INF[0], H[h])
+                s += 1
+        plt.figure()
+        color = ['r','deeppink','m','violet','b','slategray','aqua','g','orange','peru']
+        for s in range(10):
+                plt.plot(wavelength, gaussian_filter1d(synthetic_data[s] ,sigma=5),
+                         label=f'Systhetic{s}', color=color[s], marker='o', markersize=3)
+        plt.plot(wavelength, gaussian_filter1d(R_INF[0],sigma=5),
+                 label='Water_Inf', color='black', marker='o', markersize=3)
+
+        plt.xlabel('Wavelength(nm)')
+        plt.ylabel('Reflectence')
+        plt.legend()
+        plt.show()
+
+
