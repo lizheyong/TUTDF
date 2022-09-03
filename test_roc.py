@@ -22,7 +22,7 @@ def test_net(net,  test_dataset, device, batch_size):
     test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                                batch_size=batch_size,
                                                shuffle=False)
-    net.load_state_dict(torch.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\训练\resnet_{this}.pth"))
+    net.load_state_dict(torch.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\{this}\训练\resnet_{this}.pth"))
     net.eval()
 
     class_map = np.ones((1)) # 一个占位，往后拼接
@@ -43,8 +43,8 @@ def test_net(net,  test_dataset, device, batch_size):
         #     else:
         #         class_map[i] = 0
     class_map = np.delete(class_map, 0, 0)  # 最后删了这个占位的
-    class_map = np.resize(class_map, (200, 200))
-    label = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\1.6m\测试\label_1.6m.npy").flatten()
+    class_map = np.resize(class_map, (100, 100))
+    label = np.load(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\1.6m\传统方法结果\label.npy").flatten()
     TUTDF = class_map.flatten()
     auc = roc_auc_score(label, TUTDF)
     print(auc)
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     ResNet = ResNet().to(device=device)
     # dataset = test_Loader(fr"C:\Users\zheyong\Desktop\铁测试\{this}\测试\{this}.npy")
-    dataset = test_Loader(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\铁测试\{this}\测试\{this}.npy")
+    dataset = test_Loader(fr"C:\Users\zheyong\Desktop\高光谱目标检测报告\石测试\{this}\测试\{this}_stone_spatial.npy")
 
     test_net(net=ResNet, test_dataset=dataset, device=device,
               batch_size=4000)
