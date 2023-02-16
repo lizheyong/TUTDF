@@ -28,7 +28,7 @@ CUDA >= 10.1
 
 
 
-<div align=center><img src="https://github.com/lijinchao98/TUTDF/blob/master/model/resnet_readme/fig.jpg" width="600px" alt="TUTDF"></div>
+<div align=center><img src="https://github.com/lijinchao98/TUTDF/blob/master/model/resnet_readme/fig2.jpg" width="600px" alt="TUTDF"></div>
 
 
 
