@@ -14,7 +14,7 @@
 
 以上参考：https://blog.csdn.net/qq_39594939/article/details/114308617
 
-![在这里插入图片描述](a.png)
+![在这里插入图片描述](pic/a.png)
 
 [源代码keras实现][https://github.com/awni/ecg/tree/c97bb96721c128fe5aa26a092c7c33867f283997/ecg]，我用pytorch写的，由于我的输入序列长度为189，改了一些，比如卷积核改为3，残差块x5，连续残差块中每隔一个残差块增加一下通道数，下面是网络结构，参数
 
@@ -209,7 +209,7 @@ def bn_relu(channels, sequential, dropout=0, order=''):
 
 ## resnet模块
 
-![image-20220810225924382](c.png)
+![image-20220810225924382](pic/c.png)
 
 init里面就：
 
