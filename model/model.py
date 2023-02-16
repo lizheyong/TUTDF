@@ -1,4 +1,4 @@
-from dataset import dataset
+from model import dataset
 from .part import *
 
 
@@ -19,8 +19,7 @@ class ResNet(nn.Module):
 if __name__ == '__main__':
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    net = ResNet()
-    net.to(device=device)
+    net = ResNet().to(device=device)
 
     from torchsummary import summary
     summary(net, input_size=(1, 120)) # (channel, H, W). Here, (1 channel, 120 bands)
