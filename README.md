@@ -4,7 +4,7 @@ The detection of underwater targets through hyperspectral imagery is a relativel
 
 
 
-<div align=center><img src="https://github.com/lijinchao98/TUTDF\model\resnet_readme/fig.jpg" width="600px" alt="TUTDF"></div>
+<div align=center><img src="https://github.com/lijinchao98/TUTDF\model\resnet_readme\fig.jpg" width="600px" alt="TUTDF"></div>
 
 
 
